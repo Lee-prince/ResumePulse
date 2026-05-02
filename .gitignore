@@ -1,0 +1,30 @@
+# ── SECRETS (NEVER COMMIT) ──
+backend/.env
+.env
+
+# ── Python ──
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# ── Database (has user data) ──
+backend/database.db
+backend/generated_resumes/
+backend/test_*.pdf
+
+# ── OS files ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── VS Code ──
+.vscode/
+*.code-workspace
+
+# ── Node ──
+node_modules/
