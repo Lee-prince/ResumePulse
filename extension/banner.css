@@ -1,0 +1,374 @@
+/* ============================================
+   ResumePulse — banner.css
+   All banner + side panel styles
+   ============================================ */
+
+/* ── BASE BANNER ── */
+#acn-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ── JOB DETECTED BANNER (navy blue) ── */
+#acn-banner.job-banner {
+  background-color: #1B2A4A;
+  color: #E6F1FB;
+  padding: 12px 20px;
+}
+
+/* ── VISA WARNING BANNER (red) ── */
+#acn-banner.visa-banner {
+  background-color: #E24B4A;
+  color: #FCEBEB;
+  padding: 12px 20px;
+}
+
+/* ── EXPERIENCE WARNING BANNER (amber) ── */
+#acn-banner.experience-banner {
+  background-color: #BA7517;
+  color: #FAEEDA;
+  padding: 12px 20px;
+}
+
+/* ── LOADING BANNER (mid navy) ── */
+#acn-banner.loading-banner {
+  background-color: #243660;
+  color: #E6F1FB;
+  padding: 12px 20px;
+}
+
+/* ── SUCCESS BANNER (teal green) ── */
+#acn-banner.success-banner {
+  background-color: #1D9E75;
+  color: #E1F5EE;
+  padding: 12px 20px;
+}
+
+/* ── INNER CONTENT LAYOUT ── */
+#acn-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 16px;
+}
+
+/* ── LEFT SIDE TEXT ── */
+#acn-banner-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Icon circle */
+#acn-banner-text .acn-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.job-banner .acn-icon      { background-color: #378ADD; }
+.visa-banner .acn-icon     { background-color: #A32D2D; }
+.experience-banner .acn-icon { background-color: #854F0B; }
+.success-banner .acn-icon  { background-color: #0F6E56; }
+
+/* ── BUTTON GROUP ── */
+#acn-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── PRIMARY BUTTON ── */
+.acn-btn-primary {
+  background-color: #378ADD;
+  color: #ffffff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.acn-btn-primary:hover {
+  background-color: #2E4A80;
+  transform: scale(1.03);
+}
+
+/* ── SECONDARY BUTTON ── */
+.acn-btn-secondary {
+  background-color: transparent;
+  color: inherit;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+
+.acn-btn-secondary:hover {
+  border-color: rgba(255,255,255,0.9);
+  opacity: 0.85;
+}
+
+/* ── CLOSE BUTTON ── */
+#acn-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.7;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#acn-close:hover { opacity: 1; }
+
+/* ── LOADING DOTS ── */
+.acn-loading-dots span {
+  display: inline-block;
+  animation: acn-bounce 1.2s infinite;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.acn-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.acn-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes acn-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-4px); }
+}
+
+/* ── PUSH PAGE DOWN ── */
+body.acn-active {
+  padding-top: 52px !important;
+  transition: padding-top 0.2s;
+}
+
+/* ── HIGHLIGHTS ── */
+.acn-highlight {
+  border-radius: 3px;
+  padding: 0 2px;
+  font-weight: 600;
+}
+
+.acn-highlight-visa {
+  background-color: #FCEBEB;
+  color: #A32D2D;
+  outline: 1.5px solid #E24B4A;
+}
+
+.acn-highlight-exp {
+  background-color: #FAEEDA;
+  color: #854F0B;
+  outline: 1.5px solid #EF9F27;
+}
+
+/* ============================================
+   SIDE PANEL
+   ============================================ */
+
+#acn-side-panel {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 400px;
+  height: 100vh;
+  background: #1B2A4A;
+  color: #E6F1FB;
+  z-index: 999998;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.4);
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+#acn-side-panel.open { right: 0; }
+
+#acn-panel-header {
+  background: #243660;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+#acn-panel-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #E6F1FB;
+  margin: 0;
+}
+
+#acn-panel-close {
+  background: transparent;
+  border: none;
+  color: #85B7EB;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+#acn-panel-close:hover { color: white; }
+
+#acn-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+#acn-panel-body::-webkit-scrollbar { width: 4px; }
+#acn-panel-body::-webkit-scrollbar-track { background: transparent; }
+#acn-panel-body::-webkit-scrollbar-thumb { background: #378ADD; border-radius: 2px; }
+
+.acn-score-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.acn-score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 4px solid rgba(255,255,255,0.2);
+  margin-bottom: 10px;
+}
+
+.acn-score-circle .score-num {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.acn-score-circle .score-label-sm {
+  font-size: 10px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.acn-score-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.acn-score-sub {
+  font-size: 11px;
+  color: #85B7EB;
+  text-align: center;
+}
+
+.acn-panel-section { margin-bottom: 18px; }
+
+.acn-panel-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #85B7EB;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.acn-improvement-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 12px;
+  color: #B5D4F4;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  line-height: 1.5;
+}
+
+.acn-improvement-item:last-child { border-bottom: none; }
+
+.acn-improvement-icon {
+  color: #1D9E75;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.acn-suggestion-item {
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #B5D4F4;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+#acn-panel-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+.acn-download-btn {
+  width: 100%;
+  padding: 12px;
+  background: #1D9E75;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.acn-download-btn:hover { background: #178060; }
+
+.acn-view-dashboard-btn {
+  width: 100%;
+  padding: 9px;
+  background: transparent;
+  color: #85B7EB;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.15s;
+}
+
+.acn-view-dashboard-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: white;
+}

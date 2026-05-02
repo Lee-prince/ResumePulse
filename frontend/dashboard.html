@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — AI Career Navigator</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <style>
+
+    /* ── DASHBOARD LAYOUT ── */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── SIDEBAR ── */
+    .dash-sidebar {
+      position: sticky;
+      top: 80px;
+      height: fit-content;
+    }
+
+    .user-card {
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .user-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin: 0 auto 12px;
+    }
+
+    .user-name {
+      color: #E6F1FB;
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .user-email {
+      color: #85B7EB;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .user-badge {
+      display: inline-block;
+      background: rgba(55,138,221,0.2);
+      color: #85B7EB;
+      border: 1px solid rgba(55,138,221,0.3);
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    /* Sidebar stats */
+    .sidebar-stats {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .sidebar-stat:last-child { border-bottom: none; }
+
+    .sidebar-stat-label { color: var(--text-secondary); }
+
+    .sidebar-stat-val {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    /* Sidebar nav */
+    .dash-nav {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .dash-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .dash-nav-item:hover {
+      background: var(--page-bg);
+      color: var(--navy);
+    }
+
+    .dash-nav-item.active {
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-left-color: var(--blue);
+      font-weight: 500;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .dash-main { min-width: 0; }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+
+    .stat-card-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-num.green { color: var(--success); }
+    .stat-card-num.amber { color: var(--warning); }
+    .stat-card-num.blue  { color: var(--blue); }
+
+    .stat-card-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Section header */
+    .dash-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .dash-section-header h2 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    /* Resume cards */
+    .resume-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resume-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: box-shadow 0.15s;
+    }
+
+    .resume-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .resume-card-left { flex: 1; min-width: 0; }
+
+    .resume-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .resume-card-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .resume-card-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ATS Score circle */
+    .ats-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .ats-high   { background: var(--success-bg); color: #0F6E56; }
+    .ats-medium { background: var(--warning-bg); color: #854F0B; }
+    .ats-low    { background: var(--danger-bg);  color: #A32D2D; }
+    .ats-none   { background: var(--page-bg);    color: var(--text-muted); }
+
+    /* Action buttons on resume card */
+    .resume-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover { background: var(--page-bg); }
+    .btn-icon.danger:hover {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Resume detail modal overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.visible { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 1;
+    }
+
+    .modal-header h3 { font-size: 16px; margin: 0; }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+    }
+
+    .modal-close:hover { color: var(--text-primary); }
+
+    .modal-body { padding: 1.5rem; }
+
+    .resume-preview {
+      background: var(--page-bg);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      color: var(--text-primary);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+      .dash-sidebar { position: static; }
+      .stats-row    { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">R</div>
+      <span class="navbar-title">AI Career Navigator</span>
+    </a>
+    <div class="navbar-links">
+      <a href="dashboard.html" style="color:white;">Dashboard</a>
+      <a href="settings.html">Settings</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-layout">
+
+      <!-- ── SIDEBAR ── -->
+      <aside class="dash-sidebar">
+        <div class="user-card">
+          <div class="user-avatar" id="user-avatar">?</div>
+          <div class="user-name"  id="user-name">Loading...</div>
+          <div class="user-email" id="user-email"></div>
+          <div class="user-badge">Free account</div>
+        </div>
+
+        <div class="sidebar-stats">
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Resumes made</span>
+            <span class="sidebar-stat-val" id="stat-total">0</span>
+          </div>
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Best ATS score</span>
+            <span class="sidebar-stat-val green" id="stat-best">—</span>
+          </div>
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Avg ATS score</span>
+            <span class="sidebar-stat-val" id="stat-avg">—</span>
+          </div>
+          <div class="sidebar-stat">
+            <span class="sidebar-stat-label">Experience</span>
+            <span class="sidebar-stat-val" id="stat-exp">—</span>
+          </div>
+        </div>
+
+        <div class="dash-nav">
+          <a class="dash-nav-item active" href="dashboard.html">
+            📄 My resumes
+          </a>
+          <a class="dash-nav-item" href="settings.html">
+            ⚙ Settings
+          </a>
+          <a class="dash-nav-item" href="settings.html#resume">
+            ✏ Edit base resume
+          </a>
+          <a class="dash-nav-item" href="index.html">
+            🏠 Home
+          </a>
+          <a class="dash-nav-item" href="#"
+            id="nav-logout"
+            style="color:var(--danger);">
+            🚪 Log out
+          </a>
+        </div>
+      </aside>
+
+      <!-- ── MAIN ── -->
+      <main class="dash-main">
+
+        <!-- Stats row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-num blue" id="card-total">0</div>
+            <div class="stat-card-label">Total resumes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num green" id="card-best">—</div>
+            <div class="stat-card-label">Best ATS score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num amber" id="card-avg">—</div>
+            <div class="stat-card-label">Average score</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num" id="card-exp">—</div>
+            <div class="stat-card-label">Years experience</div>
+          </div>
+        </div>
+
+        <!-- Resume list -->
+        <div class="dash-section-header">
+          <h2>My tailored resumes</h2>
+          <span class="badge badge-info" id="resume-count">0 resumes</span>
+        </div>
+
+        <!-- Loading state -->
+        <div id="loading-state" style="text-align:center;padding:3rem;color:var(--text-muted);">
+          Loading your resumes...
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="empty-state" style="display:none;">
+          <div class="empty-icon">📄</div>
+          <h3>No resumes yet</h3>
+          <p>
+            Browse a job posting with the AI Career Navigator
+            extension active and click "Tailor my resume"
+            to generate your first ATS-optimized resume!
+          </p>
+          <a href="index.html" class="btn btn-primary"
+            style="width:auto;padding:10px 24px;display:inline-flex;">
+            Learn how it works →
+          </a>
+        </div>
+
+        <!-- Resume list -->
+        <div class="resume-list" id="resume-list"></div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ── RESUME DETAIL MODAL ── -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-title">Resume</h3>
+          <div style="font-size:12px;color:var(--text-muted);"
+            id="modal-meta"></div>
+        </div>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;align-items:center;
+          justify-content:space-between;margin-bottom:1rem;">
+          <div class="ats-circle ats-none" id="modal-ats">N/A</div>
+          <button class="btn btn-primary"
+            style="width:auto;padding:9px 20px;"
+            id="modal-download">
+            Download PDF
+          </button>
+        </div>
+        <div class="resume-preview" id="modal-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>AI Career Navigator © 2026 — Built with Claude AI</p>
+  </footer>
+
+  <script>
+  // ============================================
+  // dashboard.html — JavaScript
+  // Loads user profile + resume history
+  // ============================================
+
+  const API = "http://localhost:8000";
+
+  // ── AUTH ──────────────────────────────────────
+async function getToken() {
+    // Try localStorage first (works in regular browser)
+    const localToken = localStorage.getItem("authToken");
+    if (localToken) return localToken;
+
+    // Try Chrome storage (works inside extension)
+    try {
+        return new Promise(resolve => {
+            chrome.storage.local.get(["authToken"], d => {
+                resolve(d.authToken || null);
+            });
+        });
+    } catch {
+        return null;
+    }
+}
+
+  // ── ATS SCORE HELPERS ─────────────────────────
+  function atsClass(score) {
+    if (!score) return "ats-none";
+    if (score >= 70) return "ats-high";
+    if (score >= 40) return "ats-medium";
+    return "ats-low";
+  }
+
+  function atsDisplay(score) {
+    return score ? `${Math.round(score)}%` : "N/A";
+  }
+
+  // ── RENDER RESUME CARD ────────────────────────
+  function renderResumeCard(resume) {
+    const card = document.createElement("div");
+    card.className = "resume-card";
+
+    const date = new Date(resume.created_at).toLocaleDateString("en-US", {
+      month: "short", day: "numeric", year: "numeric"
+    });
+
+    card.innerHTML = `
+      <div class="resume-card-left">
+        <div class="resume-card-title">
+          ${resume.job_title || "Untitled Role"}
+        </div>
+        <div class="resume-card-meta">
+          <span>🏢 ${resume.company || "Unknown company"}</span>
+          <span>📅 ${date}</span>
+          ${resume.had_visa_warning
+            ? '<span class="badge badge-danger">Visa warning</span>' : ""}
+          ${resume.had_experience_warning
+            ? '<span class="badge badge-warning">Exp gap</span>' : ""}
+        </div>
+      </div>
+      <div class="resume-card-right">
+        <div class="ats-circle ${atsClass(resume.ats_score)}">
+          ${atsDisplay(resume.ats_score)}
+        </div>
+        <div class="resume-actions">
+          <button class="btn-icon" title="View resume"
+            data-id="${resume.id}">👁</button>
+          <button class="btn-icon danger" title="Delete"
+            data-del="${resume.id}">🗑</button>
+        </div>
+      </div>
+    `;
+
+    // View button
+    card.querySelector("[data-id]").addEventListener("click", () => {
+      openModal(resume);
+    });
+
+    // Delete button
+    card.querySelector("[data-del]").addEventListener("click", async () => {
+      if (!confirm("Delete this resume?")) return;
+      await deleteResume(resume.id);
+    });
+
+    return card;
+  }
+
+  // ── OPEN MODAL ────────────────────────────────
+  function openModal(resume) {
+    document.getElementById("modal-title").textContent =
+      resume.job_title || "Tailored Resume";
+    document.getElementById("modal-meta").textContent =
+      `${resume.company || ""} · ${
+        new Date(resume.created_at).toLocaleDateString()}`;
+
+    const atsEl = document.getElementById("modal-ats");
+    atsEl.textContent  = atsDisplay(resume.ats_score);
+    atsEl.className    = `ats-circle ${atsClass(resume.ats_score)}`;
+
+    document.getElementById("modal-content").textContent =
+      resume.tailored_resume_text || "No content available";
+
+    document.getElementById("modal").classList.add("visible");
+  }
+
+  document.getElementById("modal-close").addEventListener("click", () => {
+    document.getElementById("modal").classList.remove("visible");
+  });
+
+  document.getElementById("modal").addEventListener("click", (e) => {
+    if (e.target === document.getElementById("modal")) {
+      document.getElementById("modal").classList.remove("visible");
+    }
+  });
+
+  // Phase 4 will add real PDF download
+  document.getElementById("modal-download").addEventListener("click", () => {
+    alert("PDF download coming in Phase 4!");
+  });
+
+  // ── DELETE RESUME ─────────────────────────────
+  async function deleteResume(id) {
+    const token = await getToken();
+    try {
+      const res = await fetch(`${API}/resume/${id}`, {
+        method:  "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (res.ok) loadDashboard();
+    } catch {
+      alert("Could not delete resume.");
+    }
+  }
+
+  // ── LOAD DASHBOARD ────────────────────────────
+  async function loadDashboard() {
+    const token = await getToken();
+
+    if (!token) {
+        window.location.href = "register.html";
+        return;
+    }
+
+    try {
+        // ── Load user profile ──
+        const userRes = await fetch(`${API}/user/me`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!userRes.ok) {
+            // Token expired or invalid — clear and redirect
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("user");
+            window.location.href = "register.html";
+            return;
+        }
+
+        const user = await userRes.json();
+
+        // Fill in user info on the left sidebar
+        const initials =
+            `${user.first_name?.[0] || ""}${user.last_name?.[0] || ""}`.toUpperCase();
+
+        document.getElementById("user-avatar").textContent = initials || "LP";
+        document.getElementById("user-name").textContent  =
+            `${user.first_name} ${user.last_name}`;
+        document.getElementById("user-email").textContent = user.email;
+        document.getElementById("stat-exp").textContent   =
+            `${user.years_of_experience} yrs`;
+        document.getElementById("card-exp").textContent   =
+            user.years_of_experience;
+
+        // ── Load resumes ──
+        const resumeRes = await fetch(`${API}/user/resumes`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const resumeData = await resumeRes.json();
+        const resumes    = resumeData.resumes || [];
+
+        // Hide loading spinner
+        document.getElementById("loading-state").style.display = "none";
+
+        // Update resume count badge
+        document.getElementById("stat-total").textContent   = resumes.length;
+        document.getElementById("card-total").textContent   = resumes.length;
+        document.getElementById("resume-count").textContent =
+            `${resumes.length} resume${resumes.length !== 1 ? "s" : ""}`;
+
+        // Show empty state if no resumes yet
+        if (resumes.length === 0) {
+            document.getElementById("empty-state").style.display = "block";
+            return;
+        }
+
+        // ── Calculate ATS stats ──
+        const scores = resumes
+            .map(r => r.ats_score)
+            .filter(s => s && s > 0);
+
+        if (scores.length) {
+            const best = Math.max(...scores);
+            const avg  = scores.reduce((a, b) => a + b, 0) / scores.length;
+
+            document.getElementById("stat-best").textContent  = `${Math.round(best)}%`;
+            document.getElementById("card-best").textContent  = `${Math.round(best)}%`;
+            document.getElementById("stat-avg").textContent   = `${Math.round(avg)}%`;
+            document.getElementById("card-avg").textContent   = `${Math.round(avg)}%`;
+
+            // Color the best score green
+            document.getElementById("card-best").classList.add("green");
+            document.getElementById("stat-best").style.color = "var(--success)";
+        }
+
+        // ── Render resume cards ──
+        const list = document.getElementById("resume-list");
+        list.innerHTML = "";
+        resumes.forEach(r => list.appendChild(renderResumeCard(r)));
+
+    } catch (err) {
+        document.getElementById("loading-state").textContent =
+            "Could not load dashboard. Is the backend running on port 8000?";
+        console.error("Dashboard error:", err);
+    }
+}
+
+  // ── LOGOUT ────────────────────────────────────
+  document.getElementById("nav-logout").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!confirm("Log out?")) return;
+    try {
+      chrome.storage.local.remove(["user", "authToken"]);
+    } catch {
+      localStorage.removeItem("user");
+      localStorage.removeItem("authToken");
+    }
+    window.location.href = "register.html";
+  });
+
+  // ── INIT ──────────────────────────────────────
+  loadDashboard();
+  </script>
+
+</body>
+</html>

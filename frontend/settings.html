@@ -1,0 +1,748 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings — AI Career Navigator</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <style>
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+    }
+
+    /* ── SIDEBAR ── */
+    .settings-sidebar {
+      position: sticky;
+      top: 80px;
+      height: fit-content;
+    }
+
+    .sidebar-nav {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+
+    .sidebar-nav-item:hover {
+      background: var(--page-bg);
+      color: var(--navy);
+    }
+
+    .sidebar-nav-item.active {
+      background: var(--blue-pale);
+      color: var(--blue);
+      border-left-color: var(--blue);
+      font-weight: 500;
+    }
+
+    .sidebar-nav-item .nav-icon { font-size: 16px; }
+
+    /* ── MAIN CONTENT ── */
+    .settings-main { min-width: 0; }
+
+    .settings-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-header h3 {
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .section-header p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 2px 0 0;
+    }
+
+    .section-body { padding: 1.5rem; }
+
+    /* ── PROFILE AVATAR ── */
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    /* ── SAVE BUTTON ROW ── */
+    .save-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+
+    .save-row .btn-primary {
+      width: auto;
+      padding: 9px 24px;
+    }
+
+    /* ── RESUME SECTION ── */
+    .resume-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .resume-stat {
+      background: var(--page-bg);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .resume-stat-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .resume-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── DANGER ZONE ── */
+    .danger-zone {
+      border-color: #FECACA;
+    }
+
+    .danger-zone .section-header {
+      background: #FFF5F5;
+      border-bottom-color: #FECACA;
+    }
+
+    .danger-zone .section-header h3 {
+      color: var(--danger);
+    }
+
+    .btn-danger {
+      background: white;
+      color: var(--danger);
+      border: 1.5px solid var(--danger);
+      width: auto;
+      padding: 8px 20px;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+      .settings-sidebar { position: static; }
+      .resume-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">A</div>
+      <span class="navbar-title">AI Career Navigator</span>
+    </a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="settings.html" style="color:white;">Settings</a>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 0;">
+    <div class="settings-layout">
+
+      <!-- ── SIDEBAR ── -->
+      <aside class="settings-sidebar">
+        <div class="sidebar-nav">
+          <a class="sidebar-nav-item active" href="#profile">
+            <span class="nav-icon">👤</span> Profile
+          </a>
+          <a class="sidebar-nav-item" href="#warnings">
+            <span class="nav-icon">⚠</span> Warnings
+          </a>
+          <a class="sidebar-nav-item" href="#resume">
+            <span class="nav-icon">📄</span> Base Resume
+          </a>
+          <a class="sidebar-nav-item" href="#account">
+            <span class="nav-icon">🔒</span> Account
+          </a>
+        </div>
+
+        <!-- User card -->
+        <div class="card" style="margin-top:1rem; padding: 1rem;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px;" id="avatar-sm">?</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;" id="sidebar-name">Loading...</div>
+              <div style="font-size:11px;color:var(--text-muted);" id="sidebar-email"></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── MAIN ── -->
+      <main class="settings-main">
+
+        <!-- Alert -->
+        <div class="alert alert-success" id="alert-success">
+          <span>✓</span>
+          <span id="alert-msg">Settings saved!</span>
+        </div>
+        <div class="alert alert-error" id="alert-error">
+          <span>⚠</span>
+          <span id="alert-err-msg">Something went wrong.</span>
+        </div>
+
+        <!-- ── PROFILE SECTION ── -->
+        <div class="settings-section" id="profile">
+          <div class="section-header">
+            <div>
+              <h3>Profile information</h3>
+              <p>Update your personal details</p>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="profile-avatar" id="avatar-lg">?</div>
+
+            <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="form-group">
+                <label class="form-label">First name</label>
+                <input type="text" id="first-name" class="form-input"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last name</label>
+                <input type="text" id="last-name" class="form-input"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email address</label>
+              <input type="email" id="email" class="form-input" disabled
+                style="background:var(--page-bg);color:var(--text-muted);"/>
+              <div class="form-hint">Email cannot be changed</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Years of experience</label>
+              <input type="number" id="years-exp" class="form-input"
+                min="0" max="50" style="max-width:120px;"/>
+              <div class="form-hint">
+                Used to detect experience gaps in job postings
+              </div>
+            </div>
+
+            <div class="save-row">
+              <span class="badge badge-success" id="profile-saved"
+                style="display:none;">✓ Saved</span>
+              <button class="btn btn-primary" id="btn-save-profile">
+                Save profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── WARNINGS SECTION ── -->
+        <div class="settings-section" id="warnings">
+          <div class="section-header">
+            <div>
+              <h3>Job warning preferences</h3>
+              <p>Control what warnings appear while browsing jobs</p>
+            </div>
+          </div>
+          <div class="section-body">
+
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">🛂 Visa restriction warning</div>
+                <div class="toggle-desc">
+                  Show red banner when a job requires citizenship
+                  or won't sponsor visas
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="visa-toggle" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">⚡ Experience gap warning</div>
+                <div class="toggle-desc">
+                  Show amber banner when a job requires more years
+                  of experience than your profile shows
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="exp-toggle" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">✦ Auto-detect job pages</div>
+                <div class="toggle-desc">
+                  Automatically show the tailor resume banner
+                  when a job posting is detected
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="auto-toggle" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="save-row">
+              <span class="badge badge-success" id="warnings-saved"
+                style="display:none;">✓ Saved</span>
+              <button class="btn btn-primary" id="btn-save-warnings">
+                Save preferences
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BASE RESUME SECTION ── -->
+        <div class="settings-section" id="resume">
+          <div class="section-header">
+            <div>
+              <h3>Base resume</h3>
+              <p>This is what Claude AI uses as the starting point</p>
+            </div>
+          </div>
+          <div class="section-body">
+
+            <div class="resume-stats">
+              <div class="resume-stat">
+                <div class="resume-stat-num" id="stat-chars">0</div>
+                <div class="resume-stat-label">Characters</div>
+              </div>
+              <div class="resume-stat">
+                <div class="resume-stat-num" id="stat-words">0</div>
+                <div class="resume-stat-label">Words</div>
+              </div>
+              <div class="resume-stat">
+                <div class="resume-stat-num" id="stat-lines">0</div>
+                <div class="resume-stat-label">Lines</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Resume content</label>
+              <textarea
+                id="resume-text"
+                class="form-input form-textarea"
+                style="min-height:300px;font-family:'Courier New',monospace;font-size:13px;"
+                placeholder="Paste your resume here..."
+              ></textarea>
+            </div>
+
+            <div class="save-row">
+              <span class="badge badge-success" id="resume-saved"
+                style="display:none;">✓ Saved</span>
+              <button class="btn btn-primary" id="btn-save-resume">
+                Save resume
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ACCOUNT / DANGER ZONE ── -->
+        <div class="settings-section danger-zone" id="account">
+          <div class="section-header">
+            <div>
+              <h3>⚠ Danger zone</h3>
+              <p>Irreversible account actions</p>
+            </div>
+          </div>
+          <div class="section-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+              <div>
+                <div style="font-size:14px;font-weight:500;color:var(--text-primary);">
+                  Log out
+                </div>
+                <div style="font-size:13px;color:var(--text-muted);">
+                  Sign out of your account on this device
+                </div>
+              </div>
+              <button class="btn btn-danger" id="btn-logout">Log out</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>AI Career Navigator © 2026</p>
+  </footer>
+
+  <script>
+  // ============================================
+  // settings.html — JavaScript
+  // Loads user data + saves settings to backend
+  // ============================================
+
+  const API = "http://localhost:8000";
+
+// ── SIMPLIFIED TOKEN GETTER ───────────────────────────────────────
+// Always reads from localStorage first for web browser
+// Falls back to Chrome storage for extension context
+
+async function getToken() {
+    // Try localStorage first (works in browser)
+    const localToken = localStorage.getItem("authToken");
+    if (localToken) {
+        console.log("Token found in localStorage ✅");
+        return localToken;
+    }
+
+    // Try Chrome storage (works in extension)
+    try {
+        return new Promise(resolve => {
+            chrome.storage.local.get(["authToken"], d => {
+                console.log("Chrome storage token:", d.authToken ? "found ✅" : "not found ❌");
+                resolve(d.authToken || null);
+            });
+        });
+    } catch {
+        console.log("Chrome storage not available");
+        return null;
+    }
+}
+
+// DEBUG — remove after fixing
+async function debugAuth() {
+    console.log("=== AUTH DEBUG ===");
+    console.log("localStorage authToken:", localStorage.getItem("authToken") ? "EXISTS" : "MISSING");
+    console.log("localStorage user:", localStorage.getItem("user") ? "EXISTS" : "MISSING");
+    
+    const token = await getToken();
+    console.log("Final token:", token ? token.substring(0, 30) + "..." : "NULL");
+    
+    if (token) {
+        const res = await fetch(`${API}/user/me`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        console.log("API response status:", res.status);
+        const data = await res.json();
+        console.log("API response:", data);
+    }
+}
+
+debugAuth();
+
+  function getUser() {
+    try {
+      return new Promise(resolve => {
+        chrome.storage.local.get(["user"], d => resolve(d.user));
+      });
+    } catch {
+      const u = localStorage.getItem("user");
+      return Promise.resolve(u ? JSON.parse(u) : null);
+    }
+  }
+
+  // ── SHOW ALERTS ───────────────────────────────
+  function showSuccess(msg) {
+    const el = document.getElementById("alert-success");
+    document.getElementById("alert-msg").textContent = msg;
+    el.classList.add("visible");
+    setTimeout(() => el.classList.remove("visible"), 3000);
+  }
+
+  function showError(msg) {
+    const el = document.getElementById("alert-error");
+    document.getElementById("alert-err-msg").textContent = msg;
+    el.classList.add("visible");
+    setTimeout(() => el.classList.remove("visible"), 4000);
+  }
+
+  // ── UPDATE RESUME STATS ───────────────────────
+  function updateResumeStats(text) {
+    document.getElementById("stat-chars").textContent =
+      text.length.toLocaleString();
+    document.getElementById("stat-words").textContent =
+      (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString();
+    document.getElementById("stat-lines").textContent =
+      text.split("\n").length.toLocaleString();
+  }
+
+  document.getElementById("resume-text").addEventListener("input", e => {
+    updateResumeStats(e.target.value);
+  });
+
+  // ── LOAD USER DATA ────────────────────────────
+  async function loadUser() {
+    const token = await getToken();
+
+    if (!token) {
+        window.location.href = "register.html";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API}/user/me`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            localStorage.removeItem("authToken");
+            window.location.href = "register.html";
+            return;
+        }
+
+        const user = await res.json();
+
+        // Fill all fields
+        document.getElementById("first-name").value = user.first_name || "";
+        document.getElementById("last-name").value  = user.last_name  || "";
+        document.getElementById("email").value      = user.email      || "";
+        document.getElementById("years-exp").value  = user.years_of_experience || 0;
+
+        // Avatar initials
+        const initials = `${user.first_name?.[0] || ""}${user.last_name?.[0] || ""}`.toUpperCase();
+        document.getElementById("avatar-lg").textContent = initials || "?";
+        document.getElementById("avatar-sm").textContent = initials || "?";
+        document.getElementById("sidebar-name").textContent  =
+            `${user.first_name} ${user.last_name}`;
+        document.getElementById("sidebar-email").textContent = user.email;
+
+        // Warning toggles
+        document.getElementById("visa-toggle").checked =
+            user.visa_warning_enabled !== false;
+        document.getElementById("exp-toggle").checked  =
+            user.experience_warning_enabled !== false;
+
+        // Load resume if user has one
+        if (user.has_resume) {
+            // Fetch full user data to get resume text
+            try {
+                const stored = localStorage.getItem("user");
+                if (stored) {
+                    const u = JSON.parse(stored);
+                    if (u.base_resume_text) {
+                        document.getElementById("resume-text").value = u.base_resume_text;
+                        updateResumeStats(u.base_resume_text);
+                    }
+                }
+            } catch { /* ok */ }
+        }
+
+    } catch (err) {
+        showError("Could not load profile. Is the backend running?");
+        console.error(err);
+    }
+}
+  // ── SAVE PROFILE ──────────────────────────────
+  document.getElementById("btn-save-profile").addEventListener("click",
+  async () => {
+    const token = await getToken();
+    const btn   = document.getElementById("btn-save-profile");
+    btn.disabled = true;
+    btn.textContent = "Saving...";
+
+    try {
+      const res = await fetch(`${API}/user/settings`, {
+        method:  "PUT",
+        headers: {
+          "Content-Type":  "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          years_of_experience: parseInt(
+            document.getElementById("years-exp").value
+          )
+        })
+      });
+
+      if (res.ok) {
+        showSuccess("Profile saved successfully!");
+        document.getElementById("profile-saved").style.display = "inline";
+        setTimeout(() => {
+          document.getElementById("profile-saved").style.display = "none";
+        }, 3000);
+      } else {
+        showError("Failed to save profile.");
+      }
+    } catch {
+      showError("Cannot connect to server.");
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = "Save profile";
+    }
+  });
+
+  // ── SAVE WARNING PREFERENCES ──────────────────
+  document.getElementById("btn-save-warnings").addEventListener("click",
+  async () => {
+    const token = await getToken();
+    const btn   = document.getElementById("btn-save-warnings");
+    btn.disabled    = true;
+    btn.textContent = "Saving...";
+
+    const visaOn = document.getElementById("visa-toggle").checked;
+    const expOn  = document.getElementById("exp-toggle").checked;
+
+    try {
+      const res = await fetch(`${API}/user/settings`, {
+        method:  "PUT",
+        headers: {
+          "Content-Type":  "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          visa_warning_enabled:       visaOn,
+          experience_warning_enabled: expOn
+        })
+      });
+
+      if (res.ok) {
+        // Also update Chrome extension storage
+        try {
+          chrome.storage.sync.set({
+            visaWarningEnabled:       visaOn,
+            experienceWarningEnabled: expOn
+          });
+        } catch { /* not in extension context */ }
+
+        showSuccess("Warning preferences saved!");
+        document.getElementById("warnings-saved").style.display = "inline";
+        setTimeout(() => {
+          document.getElementById("warnings-saved").style.display = "none";
+        }, 3000);
+      } else {
+        showError("Failed to save preferences.");
+      }
+    } catch {
+      showError("Cannot connect to server.");
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = "Save preferences";
+    }
+  });
+
+  // ── SAVE BASE RESUME ──────────────────────────
+  document.getElementById("btn-save-resume").addEventListener("click",
+  async () => {
+    const token      = await getToken();
+    const resumeText = document.getElementById("resume-text").value.trim();
+    const btn        = document.getElementById("btn-save-resume");
+
+    if (resumeText.length < 100) {
+      showError("Resume is too short. Please paste your full resume.");
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = "Saving...";
+
+    try {
+      const res = await fetch(`${API}/user/resume`, {
+        method:  "PUT",
+        headers: {
+          "Content-Type":  "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ base_resume_text: resumeText })
+      });
+
+      if (res.ok) {
+        // Also save to Chrome storage
+        try {
+          chrome.storage.local.get(["user"], d => {
+            const updated = { ...d.user, base_resume_text: resumeText };
+            chrome.storage.local.set({ user: updated });
+          });
+        } catch { /* not in extension context */ }
+
+        showSuccess("Resume saved successfully!");
+        document.getElementById("resume-saved").style.display = "inline";
+        setTimeout(() => {
+          document.getElementById("resume-saved").style.display = "none";
+        }, 3000);
+        updateResumeStats(resumeText);
+      } else {
+        showError("Failed to save resume.");
+      }
+    } catch {
+      showError("Cannot connect to server.");
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = "Save resume";
+    }
+  });
+
+  // ── LOGOUT ────────────────────────────────────
+  document.getElementById("btn-logout").addEventListener("click", () => {
+    if (!confirm("Are you sure you want to log out?")) return;
+
+    try {
+      chrome.storage.local.remove(["user", "authToken"]);
+      chrome.storage.sync.remove(["visaWarningEnabled",
+        "experienceWarningEnabled", "yearsOfExperience"]);
+    } catch {
+      localStorage.removeItem("user");
+      localStorage.removeItem("authToken");
+    }
+
+    window.location.href = "register.html";
+  });
+
+  // ── INIT ──────────────────────────────────────
+  loadUser();
+  </script>
+
+</body>
+</html>

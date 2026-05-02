@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ResumePulse — Sign Up / Login</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <style>
+    .auth-page { min-height:100vh; display:flex; flex-direction:column; }
+    .auth-body {
+      flex:1; display:flex; align-items:center;
+      justify-content:center; padding:2rem 1rem;
+    }
+    .auth-card {
+      width:100%; max-width:520px; background:white;
+      border-radius:var(--radius-lg); border:1px solid var(--border);
+      box-shadow:var(--shadow-lg); overflow:hidden;
+    }
+    .auth-header { background:var(--navy); padding:2rem; text-align:center; }
+    .auth-header .logo {
+      width:48px; height:48px; background:var(--blue);
+      border-radius:var(--radius-sm); display:flex;
+      align-items:center; justify-content:center;
+      font-family:var(--font-heading); font-size:20px;
+      font-weight:700; color:white; margin:0 auto 12px;
+    }
+    .auth-header h1 { color:#E6F1FB; font-size:1.3rem; margin-bottom:4px; }
+    .auth-header p  { color:#85B7EB; font-size:13px; }
+    .auth-content   { padding:2rem; }
+    .step-panel     { display:none; }
+    .step-panel.active { display:block; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .resume-textarea { min-height:240px; font-family:'Courier New',monospace; font-size:13px; line-height:1.7; }
+    .password-strength { height:4px; border-radius:2px; background:var(--border); margin-top:8px; overflow:hidden; }
+    .password-strength-bar { height:100%; border-radius:2px; width:0%; transition:width 0.3s,background 0.3s; }
+    .strength-weak   { width:33%; background:var(--danger); }
+    .strength-medium { width:66%; background:var(--warning); }
+    .strength-strong { width:100%; background:var(--success); }
+    .password-strength-text { font-size:11px; color:var(--text-muted); margin-top:4px; }
+    .char-count { font-size:11px; color:var(--text-muted); text-align:right; margin-top:4px; }
+    .auth-footer {
+      text-align:center; padding:1rem 2rem 1.5rem;
+      border-top:1px solid var(--border); font-size:13px; color:var(--text-secondary);
+    }
+    .auth-footer a { font-weight:500; cursor:pointer; }
+    .step-buttons { display:flex; gap:10px; margin-top:1.5rem; }
+    .step-buttons .btn-secondary { max-width:100px; }
+    .tab-row { display:flex; border-bottom:2px solid var(--border); margin-bottom:1.5rem; }
+    .tab-btn {
+      flex:1; padding:10px; background:none; border:none;
+      font-size:14px; font-weight:500; color:var(--text-muted);
+      cursor:pointer; border-bottom:2px solid transparent;
+      margin-bottom:-2px; transition:all 0.15s;
+    }
+    .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+  </style>
+</head>
+<body class="auth-page">
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">R</div>
+      <span class="navbar-title">ResumePulse</span>
+    </a>
+  </nav>
+
+  <div class="auth-body">
+    <div class="auth-card">
+
+      <div class="auth-header">
+        <div class="logo">R</div>
+        <h1 id="header-title">Create your account</h1>
+        <p id="header-sub">Start getting ATS-optimized resumes in seconds</p>
+      </div>
+
+      <div class="auth-content">
+
+        <div class="tab-row">
+          <button class="tab-btn active" id="tab-register" onclick="switchTab('register')">Create Account</button>
+          <button class="tab-btn"        id="tab-login"    onclick="switchTab('login')">Log In</button>
+        </div>
+
+        <div class="alert alert-error" id="alert-error">
+          <span>⚠</span><span id="alert-message">Something went wrong.</span>
+        </div>
+        <div class="alert alert-success" id="alert-success">
+          <span>✓</span><span id="alert-success-msg">Success!</span>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="register-flow">
+          <div class="steps" id="step-indicator">
+            <div class="step active" id="step-1-ind">
+              <div class="step-num">1</div><span>Your info</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step-2-ind">
+              <div class="step-num">2</div><span>Your resume</span>
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <div class="step-panel active" id="panel-1">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First name <span>*</span></label>
+                <input type="text" id="first-name" class="form-input" placeholder="Jane"/>
+                <div class="form-error" id="err-first-name">Enter your first name.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last name <span>*</span></label>
+                <input type="text" id="last-name" class="form-input" placeholder="Smith"/>
+                <div class="form-error" id="err-last-name">Enter your last name.</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email address <span>*</span></label>
+              <input type="email" id="email" class="form-input" placeholder="jane@email.com"/>
+              <div class="form-error" id="err-email">Enter a valid email.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password <span>*</span></label>
+              <input type="password" id="password" class="form-input" placeholder="At least 8 characters"/>
+              <div class="password-strength">
+                <div class="password-strength-bar" id="strength-bar"></div>
+              </div>
+              <div class="password-strength-text" id="strength-text"></div>
+              <div class="form-error" id="err-password">Password must be at least 8 characters.</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Years of experience <span>*</span></label>
+              <input type="number" id="years-exp" class="form-input" placeholder="3" min="0" max="50"/>
+              <div class="form-hint">Used to detect experience gaps in job postings</div>
+              <div class="form-error" id="err-years">Enter your years of experience.</div>
+            </div>
+            <button class="btn btn-primary" id="btn-next">Continue to resume →</button>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-panel" id="panel-2">
+            <div class="form-group">
+              <label class="form-label">Paste your base resume <span>*</span></label>
+              <textarea id="resume-text" class="form-input form-textarea resume-textarea"
+                placeholder="Paste your full resume here...
+
+SUMMARY
+Experienced software engineer...
+
+EXPERIENCE
+Software Engineer @ Company (2022-Present)
+• Built REST APIs using Python...
+
+SKILLS
+Python, JavaScript, React, SQL..."></textarea>
+              <div class="char-count"><span id="char-count">0</span> characters</div>
+              <div class="form-hint">The more detail you include, the better the AI can tailor your resume.</div>
+              <div class="form-error" id="err-resume">Please paste your resume (minimum 100 characters).</div>
+            </div>
+            <div class="step-buttons">
+              <button class="btn btn-secondary" id="btn-back">← Back</button>
+              <button class="btn btn-primary"   id="btn-submit">
+                <span id="submit-text">Create my account</span>
+                <div class="spinner" id="submit-spinner"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="login-flow" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Email address <span>*</span></label>
+            <input type="email" id="login-email" class="form-input" placeholder="jane@email.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password <span>*</span></label>
+            <input type="password" id="login-password" class="form-input" placeholder="Your password"/>
+          </div>
+          <button class="btn btn-primary" id="btn-login">
+            <span id="login-text">Log in</span>
+            <div class="spinner" id="login-spinner"></div>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="auth-footer">
+        <span id="footer-text">Already have an account?</span>
+        <a id="footer-link" onclick="switchTab('login')"> Log in here</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer"><p>ResumePulse © 2026</p></footer>
+
+  <script>
+  const API = "http://localhost:8000";
+
+  // ── TAB SWITCHING ─────────────────────────────────────────────
+  function switchTab(tab) {
+    const isReg = tab === "register";
+    document.getElementById("tab-register").classList.toggle("active",  isReg);
+    document.getElementById("tab-login").classList.toggle("active",    !isReg);
+    document.getElementById("register-flow").style.display = isReg ? "block" : "none";
+    document.getElementById("login-flow").style.display    = isReg ? "none"  : "block";
+    document.getElementById("header-title").textContent   = isReg ? "Create your account" : "Welcome back";
+    document.getElementById("header-sub").textContent     = isReg ? "Start getting ATS-optimized resumes in seconds" : "Log in to your ResumePulse account";
+    document.getElementById("footer-text").textContent    = isReg ? "Already have an account?" : "Don't have an account?";
+    document.getElementById("footer-link").textContent    = isReg ? " Log in here" : " Create one";
+    document.getElementById("footer-link").onclick        = () => switchTab(isReg ? "login" : "register");
+    hideAlerts();
+  }
+
+  // ── ALERTS ────────────────────────────────────────────────────
+  function showError(msg) {
+    document.getElementById("alert-message").textContent = msg;
+    document.getElementById("alert-error").classList.add("visible");
+  }
+  function showSuccess(msg) {
+    document.getElementById("alert-success-msg").textContent = msg;
+    document.getElementById("alert-success").classList.add("visible");
+  }
+  function hideAlerts() {
+    document.getElementById("alert-error").classList.remove("visible");
+    document.getElementById("alert-success").classList.remove("visible");
+  }
+
+  // ── STEPS ─────────────────────────────────────────────────────
+  function goToStep2() {
+    if (!validateStep1()) return;
+    document.getElementById("step-1-ind").classList.remove("active");
+    document.getElementById("step-1-ind").classList.add("done");
+    document.getElementById("step-2-ind").classList.add("active");
+    document.getElementById("panel-1").classList.remove("active");
+    document.getElementById("panel-2").classList.add("active");
+  }
+  function goToStep1() {
+    document.getElementById("step-1-ind").classList.add("active");
+    document.getElementById("step-1-ind").classList.remove("done");
+    document.getElementById("step-2-ind").classList.remove("active");
+    document.getElementById("panel-2").classList.remove("active");
+    document.getElementById("panel-1").classList.add("active");
+  }
+  document.getElementById("btn-next").addEventListener("click", goToStep2);
+  document.getElementById("btn-back").addEventListener("click", goToStep1);
+
+  // ── VALIDATION ────────────────────────────────────────────────
+  function showFieldError(id, show) {
+    const el = document.getElementById(id);
+    if (show) el.classList.add("visible"); else el.classList.remove("visible");
+  }
+  function validateStep1() {
+    const fn = document.getElementById("first-name").value.trim();
+    const ln = document.getElementById("last-name").value.trim();
+    const em = document.getElementById("email").value.trim();
+    const pw = document.getElementById("password").value;
+    const yr = document.getElementById("years-exp").value;
+    showFieldError("err-first-name", !fn);
+    showFieldError("err-last-name",  !ln);
+    showFieldError("err-email",      !em || !em.includes("@"));
+    showFieldError("err-password",   pw.length < 8);
+    showFieldError("err-years",      yr === "");
+    return fn && ln && em && pw.length >= 8 && yr !== "";
+  }
+
+  // ── PASSWORD STRENGTH ─────────────────────────────────────────
+  document.getElementById("password").addEventListener("input", e => {
+    const pw  = e.target.value;
+    const bar = document.getElementById("strength-bar");
+    const txt = document.getElementById("strength-text");
+    bar.className = "password-strength-bar";
+    if (!pw)              { txt.textContent = ""; return; }
+    if (pw.length < 8)    { bar.classList.add("strength-weak");   txt.textContent = "Too short"; }
+    else if (pw.length < 12 || !/[0-9]/.test(pw))
+                          { bar.classList.add("strength-medium");  txt.textContent = "Medium — add numbers"; }
+    else                  { bar.classList.add("strength-strong");  txt.textContent = "Strong ✓"; }
+  });
+
+  // ── CHAR COUNTER ──────────────────────────────────────────────
+  document.getElementById("resume-text").addEventListener("input", e => {
+    document.getElementById("char-count").textContent = e.target.value.length.toLocaleString();
+  });
+
+  // ── SAVE TOKEN ────────────────────────────────────────────────
+  function saveAndRedirect(user, token) {
+    // Always save to localStorage (works everywhere)
+    localStorage.setItem("authToken", token);
+    localStorage.setItem("user",      JSON.stringify(user));
+
+    // Try Chrome storage (works when page is loaded inside extension context)
+    try {
+      if (typeof chrome !== "undefined" &&
+          chrome.storage &&
+          chrome.storage.local) {
+        chrome.storage.local.set({ user, authToken: token });
+        chrome.storage.sync.set({
+          yearsOfExperience:        user.years_of_experience || 0,
+          visaWarningEnabled:       user.visa_warning_enabled !== false,
+          experienceWarningEnabled: user.experience_warning_enabled !== false,
+        });
+      }
+    } catch(e) { /* not in extension context */ }
+
+    window.location.href = "dashboard.html";
+  }
+
+  // ── REGISTER ──────────────────────────────────────────────────
+  document.getElementById("btn-submit").addEventListener("click", async () => {
+    const resume = document.getElementById("resume-text").value.trim();
+    showFieldError("err-resume", resume.length < 100);
+    if (resume.length < 100) return;
+
+    const btn = document.getElementById("btn-submit");
+    document.getElementById("submit-text").textContent = "Creating account...";
+    document.getElementById("submit-spinner").classList.add("visible");
+    btn.disabled = true;
+    hideAlerts();
+
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name:          document.getElementById("first-name").value.trim(),
+          last_name:           document.getElementById("last-name").value.trim(),
+          email:               document.getElementById("email").value.trim(),
+          password:            document.getElementById("password").value,
+          years_of_experience: parseInt(document.getElementById("years-exp").value),
+          base_resume_text:    resume,
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showSuccess("Account created! Redirecting...");
+        setTimeout(() => saveAndRedirect(data.user, data.token), 800);
+      } else {
+        showError(data.detail || "Registration failed. Please try again.");
+      }
+    } catch {
+      showError("Cannot connect to server. Make sure the backend is running.");
+    } finally {
+      document.getElementById("submit-text").textContent = "Create my account";
+      document.getElementById("submit-spinner").classList.remove("visible");
+      btn.disabled = false;
+    }
+  });
+
+  // ── LOGIN ─────────────────────────────────────────────────────
+  document.getElementById("btn-login").addEventListener("click", async () => {
+    const email = document.getElementById("login-email").value.trim();
+    const pw    = document.getElementById("login-password").value;
+    hideAlerts();
+    if (!email || !pw) { showError("Please enter your email and password."); return; }
+
+    const btn = document.getElementById("btn-login");
+    document.getElementById("login-text").textContent = "Logging in...";
+    document.getElementById("login-spinner").classList.add("visible");
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`${API}/auth/login`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ email, password: pw })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showSuccess("Logged in! Redirecting...");
+        setTimeout(() => saveAndRedirect(data.user, data.token), 800);
+      } else {
+        showError(data.detail || "Incorrect email or password.");
+      }
+    } catch {
+      showError("Cannot connect to server. Make sure the backend is running.");
+    } finally {
+      document.getElementById("login-text").textContent = "Log in";
+      document.getElementById("login-spinner").classList.remove("visible");
+      btn.disabled = false;
+    }
+  });
+
+  // ── AUTO REDIRECT IF LOGGED IN ────────────────────────────────
+  (function checkLoggedIn() {
+    const token = localStorage.getItem("authToken");
+    if (token) window.location.href = "dashboard.html";
+  })();
+
+  if (window.location.hash === "#login") switchTab("login");
+  </script>
+</body>
+</html>

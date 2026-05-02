@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Career Navigator — ATS-Optimized Resumes</title>
+  <link rel="stylesheet" href="styles/main.css"/>
+  <style>
+
+    /* ── HERO SECTION ── */
+    .hero {
+      background: linear-gradient(135deg, #1B2A4A 0%, #2E4A80 100%);
+      padding: 5rem 0 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at 60% 50%,
+        rgba(55,138,221,0.15) 0%,
+        transparent 70%
+      );
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(55,138,221,0.2);
+      border: 1px solid rgba(55,138,221,0.4);
+      color: #85B7EB;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      color: white;
+      font-size: 3rem;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero h1 span { color: #85B7EB; }
+
+    .hero p {
+      color: #B5D4F4;
+      font-size: 1.1rem;
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-buttons .btn-primary {
+      width: auto;
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 12px;
+    }
+
+    .hero-buttons .btn-ghost {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      padding: 14px 28px;
+      font-size: 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-buttons .btn-ghost:hover {
+      background: rgba(255,255,255,0.18);
+      color: white;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .stat-item-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .stat-item-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .section {
+      padding: 5rem 0;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 16px;
+      max-width: 500px;
+      margin: 0 auto 3rem;
+    }
+
+    /* Steps */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: "";
+      position: absolute;
+      top: 28px;
+      left: 12%;
+      right: 12%;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .step-card {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 1rem;
+      border: 3px solid white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-circle.blue   { background: var(--blue-pale); }
+    .step-circle.navy   { background: var(--navy); color: white; }
+    .step-circle.green  { background: var(--success-bg); }
+    .step-circle.amber  { background: var(--warning-bg); }
+
+    .step-card h4 {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--navy);
+    }
+
+    .step-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── FEATURES ── */
+    .features-bg { background: var(--page-bg); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── BANNER PREVIEW ── */
+    .preview-section {
+      padding: 5rem 0;
+      background: white;
+    }
+
+    .banner-previews {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .banner-preview {
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 14px;
+    }
+
+    .banner-preview.blue  {
+      background: #1B2A4A;
+      color: #E6F1FB;
+    }
+
+    .banner-preview.red   {
+      background: #E24B4A;
+      color: #FCEBEB;
+    }
+
+    .banner-preview.amber {
+      background: #BA7517;
+      color: #FAEEDA;
+    }
+
+    .banner-preview.green {
+      background: #1D9E75;
+      color: #E1F5EE;
+    }
+
+    .banner-btn {
+      background: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .banner-btn.blue  { color: #1B2A4A; }
+    .banner-btn.red   { color: #E24B4A; }
+    .banner-btn.amber { color: #BA7517; }
+    .banner-btn.green { color: #1D9E75; }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: linear-gradient(135deg, #1B2A4A 0%, #2E4A80 100%);
+      padding: 5rem 0;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      color: white;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      color: #B5D4F4;
+      font-size: 16px;
+      margin-bottom: 2rem;
+    }
+
+    .cta-section .btn-primary {
+      width: auto;
+      padding: 14px 40px;
+      font-size: 16px;
+      border-radius: 12px;
+      background: white;
+      color: var(--navy);
+    }
+
+    .cta-section .btn-primary:hover {
+      background: var(--blue-pale);
+      color: var(--navy);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero h1       { font-size: 2rem; }
+      .stats-grid    { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid    { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid::before { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1    { font-size: 1.7rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <div class="navbar-logo">A</div>
+      <span class="navbar-title">AI Career Navigator</span>
+    </a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="settings.html">Settings</a>
+      <a href="register.html"
+        style="background:var(--blue);color:white;padding:7px 16px;border-radius:20px;">
+        Get started
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-badge">
+        ✦ Powered by Claude AI
+      </div>
+      <h1>
+        Get shortlisted for more jobs with
+        <span>ATS-optimized resumes</span>
+      </h1>
+      <p>
+        Our Chrome Extension detects job postings as you browse,
+        warns you about visa restrictions, and tailors your resume
+        to match every job description — in seconds.
+      </p>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn btn-primary">
+          Create free account →
+        </a>
+        <a href="#how-it-works" class="btn-ghost">
+          See how it works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-item-num">94%</div>
+          <div class="stat-item-label">ATS pass rate</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item-num">&lt;10s</div>
+          <div class="stat-item-label">Resume generation</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item-num">50+</div>
+          <div class="stat-item-label">Job sites supported</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item-num">Free</div>
+          <div class="stat-item-label">To get started</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">From job posting to tailored resume in 4 steps</h2>
+      <p class="section-subtitle">
+        Install once, benefit every time you browse jobs
+      </p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-circle blue">🔍</div>
+          <h4>Browse any job site</h4>
+          <p>Works on LinkedIn, Indeed, Greenhouse, Lever, and any company careers page</p>
+        </div>
+        <div class="step-card">
+          <div class="step-circle navy">✦</div>
+          <h4>Extension detects the job</h4>
+          <p>AI scans the page and shows a banner when a job description is found</p>
+        </div>
+        <div class="step-card">
+          <div class="step-circle green">🤖</div>
+          <h4>Algorithm tailors your resume</h4>
+          <p>Your base resume is rewritten to match the job's keywords and requirements</p>
+        </div>
+        <div class="step-card">
+          <div class="step-circle amber">📄</div>
+          <h4>Download and apply</h4>
+          <p>Get a PDF ready to submit — optimized to pass ATS screening systems</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="section features-bg">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything you need to land more interviews</h2>
+      <p class="section-subtitle">
+        Built for international students, new grads, and job seekers
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:var(--blue-pale);">🤖</div>
+          <h3>AI resume tailoring</h3>
+          <p>Our Algorithm with Groq LLM rewrites your resume to mirror the exact language and keywords of each job description — making you more visible to ATS systems.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:var(--danger-bg);">🛂</div>
+          <h3>Visa restriction alerts</h3>
+          <p>Instantly flags jobs that require US citizenship, security clearance, or won't sponsor visas — saving you time on applications you can't win.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:var(--warning-bg);">⚡</div>
+          <h3>Experience gap detection</h3>
+          <p>Warns you when a job requires significantly more years of experience than your profile shows, so you can apply strategically.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:var(--success-bg);">📊</div>
+          <h3>ATS score</h3>
+          <p>Every generated resume comes with an ATS compatibility score so you know exactly how well it matches before you submit.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:var(--blue-pale);">📄</div>
+          <h3>One-click PDF export</h3>
+          <p>Download your tailored resume as a clean, professionally formatted PDF ready to attach to any application.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#F3E8FF">🔒</div>
+          <h3>Your data stays private</h3>
+          <p>Your resume is stored securely and only used to generate tailored versions for you. Never shared, never sold.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BANNER PREVIEW ── -->
+  <section class="preview-section">
+    <div class="container">
+      <div class="section-label">See it in action</div>
+      <h2 class="section-title">Smart banners for every situation</h2>
+      <p class="section-subtitle">
+        The extension shows different banners based on what it finds
+      </p>
+
+      <div class="banner-previews">
+        <div class="banner-preview blue">
+          <span>✦ <strong>Job detected!</strong> Want an ATS-optimized resume tailored for this role?</span>
+          <button class="banner-btn blue">Tailor my resume</button>
+        </div>
+
+        <div class="banner-preview red">
+          <span>⚠ <strong>Visa restriction detected!</strong> This job may require US citizenship — you may not be eligible.</span>
+          <button class="banner-btn red">Apply anyway</button>
+        </div>
+
+        <div class="banner-preview amber">
+          <span>⚡ <strong>Experience gap!</strong> Role requires 8 years, your profile shows 3 years.</span>
+          <button class="banner-btn amber">Tailor anyway</button>
+        </div>
+
+        <div class="banner-preview green">
+          <span>✓ <strong>Your ATS resume is ready!</strong> Tailored and optimized for this role.</span>
+          <button class="banner-btn green">Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to get shortlisted?</h2>
+      <p>Create your free account and start tailoring resumes in minutes</p>
+      <a href="register.html" class="btn btn-primary">
+        Get started for free →
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <p>
+      AI Career Navigator © 2026 — Built with Groq LLM ·
+      <a href="register.html">Sign up</a> ·
+      <a href="dashboard.html">Dashboard</a> ·
+      <a href="settings.html">Settings</a>
+    </p>
+  </footer>
+
+</body>
+</html>
